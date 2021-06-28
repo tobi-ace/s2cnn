@@ -24,7 +24,7 @@ so3_conv = SO3Convolution(nfeature_in=15, nfeature_out=21, b_in=32, b_out=24, gr
 so3_conv.to(device)
 
 def phi(x):
-    x = s2_conv(x)
+    x = s2_conv(x).real
     x = torch.nn.functional.relu(x)
     x = so3_conv(x)
     return x

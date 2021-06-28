@@ -23,7 +23,9 @@ def s2_fft(x, for_grad=False, b_out=None):
     assert b_out <= b_in
     batch_size = x.size()[:-3]
 
+    
     x = x.view(-1, 2 * b_in, 2 * b_in, 2)  # [batch, beta, alpha, complex]
+    
 
     '''
     :param x: [batch, beta, alpha, complex] (nbatch, 2 * b_in, 2 * b_in, 2)
@@ -34,9 +36,8 @@ def s2_fft(x, for_grad=False, b_out=None):
 
     wigner = _setup_wigner(b_in, nl=b_out, weighted=not for_grad, device=x.device)
     wigner = wigner.view(2 * b_in, -1)  # [beta, l * m] (2 * b_in, nspec)
-
-    x = torch.fft.fft(x, 1)  # [batch, beta, m, complex]
-
+    
+    x = torch.fft.fft(x).real  # [batch, beta, m, complex]
     output = x.new_empty((nspec, nbatch, 2))
     if x.is_cuda and x.dtype == torch.float32:
         import s2cnn.utils.cuda as cuda_utils
