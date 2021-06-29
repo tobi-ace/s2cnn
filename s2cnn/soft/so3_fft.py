@@ -92,7 +92,10 @@ def so3_rfft(x, for_grad=False, b_out=None):
         cuda_kernel(x, wigner, output)
     else:
         # TODO use torch.rfft
-        x = torch.fft.rfft(torch.stack((x, torch.zeros_like(x)), dim=-1), 2).real
+        if x.dtype == torch.cfloat:
+            x = torch.fft.rfft(torch.stack((x.real, torch.zeros_like(x.real)), dim=-1), 2).real
+        else:
+            x = torch.fft.rfft(torch.stack((x, torch.zeros_like(x)), dim=-1), 2).real
         if b_in < b_out:
             output.fill_(0)
         for l in range(b_out):

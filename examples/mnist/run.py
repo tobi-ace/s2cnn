@@ -87,9 +87,9 @@ class S2ConvNet_original(nn.Module):
     def forward(self, x):
 
         x = self.conv1(x)
-        x = F.relu(x)
+        x = F.relu(x.real)
         x = self.conv2(x)
-        x = F.relu(x)
+        x = F.relu(x.real)
 
         x = so3_integrate(x)
 
